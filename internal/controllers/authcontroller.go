@@ -86,6 +86,7 @@ func (a *AuthController) SignUp() fiber.Handler {
 		LastName   string `json:"lastName" validate:"required"`
 		FirstName  string `json:"firstName" validate:"required"`
 		MiddleName string `json:"middleName" validate:"required"`
+		Role       string `json:"role" validate:"required"`
 	}
 
 	return func(ctx *fiber.Ctx) error {
@@ -103,15 +104,20 @@ func (a *AuthController) SignUp() fiber.Handler {
 			return bad(err.Error())
 		}
 
+		logger.Info("sign up user", slog.Any("request", req))
+
 		u := &dto.RegisterUser{
 			User: entity.User{
 				Email:      req.Email,
 				LastName:   req.LastName,
 				FirstName:  req.FirstName,
 				MiddleName: req.MiddleName,
+				Role:       entity.Role(req.Role),
 			},
 			Password: req.Password,
 		}
+
+		logger.Info("sign up user", slog.Any("dto", u))
 
 		tokens, err := a.service.SignUp(ctx.Context(), u)
 		if err != nil {

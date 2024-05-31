@@ -9,7 +9,7 @@ import (
 type Config struct {
 	App struct {
 		Host string `env:"APP_HOST" env-default:"0.0.0.0"`
-		Port int    `env:"APP_PORT" env-default:"8080"`
+		Port int    `env:"APP_PORT" env-default:"8081"`
 	}
 	Services struct {
 		AuthService struct {
@@ -24,7 +24,7 @@ type Config struct {
 func New() *Config {
 	config := &Config{}
 	if err := cleanenv.ReadEnv(config); err != nil {
-		header := "SOCHYA GATEWAY"
+		header := "GATEWAY"
 		f := cleanenv.FUsage(os.Stdout, config, &header)
 		f()
 		panic(err)

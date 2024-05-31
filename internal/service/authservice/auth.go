@@ -76,6 +76,7 @@ func (s *Service) SignUp(ctx context.Context, user *dto.RegisterUser) (*entity.T
 		LastName:   user.LastName,
 		FirstName:  user.FirstName,
 		MiddleName: user.MiddleName,
+		Role:       auth.Role(auth.Role_value[string(user.Role)]),
 	}
 
 	res, err := s.client.SignUp(ctx, req)
