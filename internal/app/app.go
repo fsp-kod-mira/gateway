@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"fmt"
+	"gateway/api/auth"
 	"gateway/internal/config"
 	"gateway/internal/controllers"
 	"gateway/pkg/middleware"
@@ -19,12 +20,14 @@ type App struct {
 	logger *slog.Logger
 
 	AuthController *controllers.AuthController
+	CvController   *controllers.CvController
 }
 
 func newApp(
 	config *config.Config,
 	log *slog.Logger,
 	authController *controllers.AuthController,
+	cvController *controllers.CvController,
 ) *App {
 	app := fiber.New(fiber.Config{
 		AppName:       "sochya-gateway",
@@ -51,6 +54,7 @@ func newApp(
 		config:         config,
 		logger:         log,
 		AuthController: authController,
+		CvController:   cvController,
 	}
 }
 
@@ -76,6 +80,11 @@ func (a *App) Run() error {
 	au.Post("/sign-out", a.AuthController.AuthRequired(), a.AuthController.SignOut())
 	au.Post("/refresh", a.AuthController.Refresh())
 	v1.Get("/profile", a.AuthController.AuthRequired(), a.AuthController.Profile())
+
+	cv := v1.Group("/cv")
+	cv.Post("/", a.AuthController.AuthRequired(auth.Role_recruiter, auth.Role_hiring_manager), a.CvController.Upload())
+	cv.Get("/", a.AuthController.AuthRequired(auth.Role_hiring_manager, auth.Role_resource_manager), a.CvController.GetAll())
+	cv.Get("/:id", a.AuthController.AuthRequired(), a.CvController.Get())
 
 	a.logger.Info("server started", slog.String("host", host), slog.Int("port", port))
 	return a.app.Listen(fmt.Sprintf("%s:%d", host, port))

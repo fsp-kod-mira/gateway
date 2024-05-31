@@ -16,6 +16,10 @@ type Config struct {
 			Host string `env:"AUTH_SERVICE_HOST" env-default:"localhost"`
 			Port int    `env:"AUTH_SERVICE_PORT" env-default:"50053"`
 		}
+		CvService struct {
+			Host string `env:"CV_SERVICE_HOST" env-default:"localhost"`
+			Port int    `env:"CV_SERVICE_PORT" env-default:"50054"`
+		}
 	}
 
 	LogLevel string `env:"LOG_LEVEL" env-default:"debug"`
