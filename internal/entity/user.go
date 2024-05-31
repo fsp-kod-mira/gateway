@@ -1,12 +1,13 @@
 package entity
 
-type Role int32
+type Role string
 
 type User struct {
 	Email      string `json:"email"`
 	LastName   string `json:"lastName"`
 	FirstName  string `json:"firstName"`
 	MiddleName string `json:"middleName"`
+	Role       Role   `json:"role"`
 }
 
 type UserCredentials struct {

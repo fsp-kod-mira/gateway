@@ -187,5 +187,6 @@ func (s *Service) FindById(ctx context.Context, id string) (*entity.User, error)
 		LastName:   response.LastName,
 		FirstName:  response.FirstName,
 		MiddleName: response.MiddleName,
+		Role:       entity.Role(response.Role.String()),
 	}, nil
 }

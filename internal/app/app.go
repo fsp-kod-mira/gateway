@@ -63,7 +63,7 @@ func (a *App) Run() error {
 	a.app.Use(middleware.AttachLogger(a.logger))
 
 	a.app.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://localhost:5173, http://localhost:5173",
+		AllowOrigins:     "https://localhost:3001, http://localhost:3001",
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}))
