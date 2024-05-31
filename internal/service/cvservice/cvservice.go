@@ -47,6 +47,8 @@ func (s *Service) GetAll(ctx context.Context, pagination *entity.Pagination) ([]
 		Offset: int32(pagination.Offset),
 	})
 	if err != nil {
+		// if e, ok := status.FromError(err); ok {
+		// }
 		return nil, err
 	}
 
@@ -63,11 +65,10 @@ func (s *Service) GetAll(ctx context.Context, pagination *entity.Pagination) ([]
 }
 
 // Upload implements controllers.CvService.
-func (s *Service) Upload(ctx context.Context, src *entity.CV) error {
-	_, err := s.client.Upload(ctx, &cv.CV{
-		FileId:       src.FileId,
-		UploadedById: src.UploadedBy,
-		Status:       src.Status,
+func (s *Service) Upload(ctx context.Context, info *entity.CVInfo) error {
+	_, err := s.client.Upload(ctx, &cv.UploadRequest{
+		FileId:       info.FileId,
+		UploadedById: info.UploadedBy,
 	})
 	if err != nil {
 		return err

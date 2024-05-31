@@ -10,7 +10,7 @@ import (
 )
 
 type CvService interface {
-	Upload(ctx context.Context, src *entity.CV) error
+	Upload(ctx context.Context, fileInfo *entity.CVInfo) error
 	Get(ctx context.Context, id string) (*entity.CV, error)
 	GetAll(context.Context, *entity.Pagination) ([]*entity.CV, error)
 }
@@ -24,15 +24,14 @@ type ObjectStorage interface {
 	Upload(filename string, reader io.Reader, size uint64) (string, error)
 }
 
-func NewCvController(service CvService) *CvController {
+func NewCvController(service CvService, uploader ObjectStorage) *CvController {
 	return &CvController{
-		service: service,
+		service:  service,
+		uploader: uploader,
 	}
 }
 
 func (c *CvController) Upload() fiber.Handler {
-	// FORM DATA -> {cv}
-
 	type response struct {
 		Filename string `json:"filename"`
 	}
@@ -43,6 +42,8 @@ func (c *CvController) Upload() fiber.Handler {
 			return internal(err.Error())
 		}
 
+		u := ctx.Locals("user").(*entity.UserClaims)
+
 		reader, err := f.Open()
 		if err != nil {
 			return internal(err.Error())
@@ -52,6 +53,11 @@ func (c *CvController) Upload() fiber.Handler {
 		if err != nil {
 			return internal(err.Error())
 		}
+
+		c.service.Upload(ctx.Context(), &entity.CVInfo{
+			FileId:     filename,
+			UploadedBy: u.Id,
+		})
 
 		return ok(ctx, &response{
 			Filename: filename,

@@ -20,6 +20,10 @@ type Config struct {
 			Host string `env:"CV_SERVICE_HOST" env-default:"localhost"`
 			Port int    `env:"CV_SERVICE_PORT" env-default:"50054"`
 		}
+		ObjectStorage struct {
+			Host string `env:"OBJECT_STORAGE_SERVICE_HOST" env-default:"localhost"`
+			Port int    `env:"OBJECT_STORAGE_SERVICE_PORT" env-default:"50054"`
+		}
 	}
 
 	LogLevel string `env:"LOG_LEVEL" env-default:"debug"`

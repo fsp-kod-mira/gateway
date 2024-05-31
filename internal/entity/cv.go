@@ -8,3 +8,8 @@ type CV struct {
 	Features   map[string]interface{}
 	Metric     float64
 }
+
+type CVInfo struct {
+	UploadedBy string
+	FileId     string
+}
