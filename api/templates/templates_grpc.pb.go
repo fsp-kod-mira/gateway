@@ -19,22 +19,24 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	TemplatesStorage_CreateLink_FullMethodName              = "/TemplatesService.TemplatesStorage/CreateLink"
-	TemplatesStorage_CreateTemplate_FullMethodName          = "/TemplatesService.TemplatesStorage/CreateTemplate"
-	TemplatesStorage_DeleteTemplate_FullMethodName          = "/TemplatesService.TemplatesStorage/DeleteTemplate"
-	TemplatesStorage_DeleteLink_FullMethodName              = "/TemplatesService.TemplatesStorage/DeleteLink"
-	TemplatesStorage_GetAllTemplates_FullMethodName         = "/TemplatesService.TemplatesStorage/GetAllTemplates"
-	TemplatesStorage_GetFeaturesByTemplateId_FullMethodName = "/TemplatesService.TemplatesStorage/GetFeaturesByTemplateId"
+	Templates_CreateLink_FullMethodName              = "/TemplatesService.Templates/CreateLink"
+	Templates_CreateTemplate_FullMethodName          = "/TemplatesService.Templates/CreateTemplate"
+	Templates_CreateFeature_FullMethodName           = "/TemplatesService.Templates/CreateFeature"
+	Templates_DeleteTemplate_FullMethodName          = "/TemplatesService.Templates/DeleteTemplate"
+	Templates_DeleteLink_FullMethodName              = "/TemplatesService.Templates/DeleteLink"
+	Templates_GetAllTemplates_FullMethodName         = "/TemplatesService.Templates/GetAllTemplates"
+	Templates_GetFeaturesByTemplateId_FullMethodName = "/TemplatesService.Templates/GetFeaturesByTemplateId"
 )
 
-// TemplatesStorageClient is the client API for TemplatesStorage service.
+// TemplatesClient is the client API for Templates service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type TemplatesStorageClient interface {
+type TemplatesClient interface {
 	// Создание связи между фичами и шаблонами
 	CreateLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*IdStruct, error)
 	// Создание нового шаблона
 	CreateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*IdStruct, error)
+	CreateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*IdStruct, error)
 	// Удаление шаблона по id
 	DeleteTemplate(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error)
 	// Удаление связи между таблицами
@@ -44,76 +46,86 @@ type TemplatesStorageClient interface {
 	GetFeaturesByTemplateId(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*FeaturesList, error)
 }
 
-type templatesStorageClient struct {
+type templatesClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewTemplatesStorageClient(cc grpc.ClientConnInterface) TemplatesStorageClient {
-	return &templatesStorageClient{cc}
+func NewTemplatesClient(cc grpc.ClientConnInterface) TemplatesClient {
+	return &templatesClient{cc}
 }
 
-func (c *templatesStorageClient) CreateLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*IdStruct, error) {
+func (c *templatesClient) CreateLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*IdStruct, error) {
 	out := new(IdStruct)
-	err := c.cc.Invoke(ctx, TemplatesStorage_CreateLink_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Templates_CreateLink_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *templatesStorageClient) CreateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*IdStruct, error) {
+func (c *templatesClient) CreateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*IdStruct, error) {
 	out := new(IdStruct)
-	err := c.cc.Invoke(ctx, TemplatesStorage_CreateTemplate_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Templates_CreateTemplate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *templatesStorageClient) DeleteTemplate(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error) {
+func (c *templatesClient) CreateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*IdStruct, error) {
+	out := new(IdStruct)
+	err := c.cc.Invoke(ctx, Templates_CreateFeature_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templatesClient) DeleteTemplate(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, TemplatesStorage_DeleteTemplate_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Templates_DeleteTemplate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *templatesStorageClient) DeleteLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*Empty, error) {
+func (c *templatesClient) DeleteLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, TemplatesStorage_DeleteLink_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Templates_DeleteLink_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *templatesStorageClient) GetAllTemplates(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*TemplatesList, error) {
+func (c *templatesClient) GetAllTemplates(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*TemplatesList, error) {
 	out := new(TemplatesList)
-	err := c.cc.Invoke(ctx, TemplatesStorage_GetAllTemplates_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Templates_GetAllTemplates_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *templatesStorageClient) GetFeaturesByTemplateId(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*FeaturesList, error) {
+func (c *templatesClient) GetFeaturesByTemplateId(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*FeaturesList, error) {
 	out := new(FeaturesList)
-	err := c.cc.Invoke(ctx, TemplatesStorage_GetFeaturesByTemplateId_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Templates_GetFeaturesByTemplateId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// TemplatesStorageServer is the server API for TemplatesStorage service.
-// All implementations must embed UnimplementedTemplatesStorageServer
+// TemplatesServer is the server API for Templates service.
+// All implementations must embed UnimplementedTemplatesServer
 // for forward compatibility
-type TemplatesStorageServer interface {
+type TemplatesServer interface {
 	// Создание связи между фичами и шаблонами
 	CreateLink(context.Context, *FeatureLinkTemplateStruct) (*IdStruct, error)
 	// Создание нового шаблона
 	CreateTemplate(context.Context, *TemplateStruct) (*IdStruct, error)
+	CreateFeature(context.Context, *FeatureStruct) (*IdStruct, error)
 	// Удаление шаблона по id
 	DeleteTemplate(context.Context, *IdStruct) (*Empty, error)
 	// Удаление связи между таблицами
@@ -121,182 +133,207 @@ type TemplatesStorageServer interface {
 	// Получение всех шаблонов
 	GetAllTemplates(context.Context, *Empty) (*TemplatesList, error)
 	GetFeaturesByTemplateId(context.Context, *IdStruct) (*FeaturesList, error)
-	mustEmbedUnimplementedTemplatesStorageServer()
+	mustEmbedUnimplementedTemplatesServer()
 }
 
-// UnimplementedTemplatesStorageServer must be embedded to have forward compatible implementations.
-type UnimplementedTemplatesStorageServer struct {
+// UnimplementedTemplatesServer must be embedded to have forward compatible implementations.
+type UnimplementedTemplatesServer struct {
 }
 
-func (UnimplementedTemplatesStorageServer) CreateLink(context.Context, *FeatureLinkTemplateStruct) (*IdStruct, error) {
+func (UnimplementedTemplatesServer) CreateLink(context.Context, *FeatureLinkTemplateStruct) (*IdStruct, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLink not implemented")
 }
-func (UnimplementedTemplatesStorageServer) CreateTemplate(context.Context, *TemplateStruct) (*IdStruct, error) {
+func (UnimplementedTemplatesServer) CreateTemplate(context.Context, *TemplateStruct) (*IdStruct, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTemplate not implemented")
 }
-func (UnimplementedTemplatesStorageServer) DeleteTemplate(context.Context, *IdStruct) (*Empty, error) {
+func (UnimplementedTemplatesServer) CreateFeature(context.Context, *FeatureStruct) (*IdStruct, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateFeature not implemented")
+}
+func (UnimplementedTemplatesServer) DeleteTemplate(context.Context, *IdStruct) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTemplate not implemented")
 }
-func (UnimplementedTemplatesStorageServer) DeleteLink(context.Context, *FeatureLinkTemplateStruct) (*Empty, error) {
+func (UnimplementedTemplatesServer) DeleteLink(context.Context, *FeatureLinkTemplateStruct) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteLink not implemented")
 }
-func (UnimplementedTemplatesStorageServer) GetAllTemplates(context.Context, *Empty) (*TemplatesList, error) {
+func (UnimplementedTemplatesServer) GetAllTemplates(context.Context, *Empty) (*TemplatesList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllTemplates not implemented")
 }
-func (UnimplementedTemplatesStorageServer) GetFeaturesByTemplateId(context.Context, *IdStruct) (*FeaturesList, error) {
+func (UnimplementedTemplatesServer) GetFeaturesByTemplateId(context.Context, *IdStruct) (*FeaturesList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFeaturesByTemplateId not implemented")
 }
-func (UnimplementedTemplatesStorageServer) mustEmbedUnimplementedTemplatesStorageServer() {}
+func (UnimplementedTemplatesServer) mustEmbedUnimplementedTemplatesServer() {}
 
-// UnsafeTemplatesStorageServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to TemplatesStorageServer will
+// UnsafeTemplatesServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TemplatesServer will
 // result in compilation errors.
-type UnsafeTemplatesStorageServer interface {
-	mustEmbedUnimplementedTemplatesStorageServer()
+type UnsafeTemplatesServer interface {
+	mustEmbedUnimplementedTemplatesServer()
 }
 
-func RegisterTemplatesStorageServer(s grpc.ServiceRegistrar, srv TemplatesStorageServer) {
-	s.RegisterService(&TemplatesStorage_ServiceDesc, srv)
+func RegisterTemplatesServer(s grpc.ServiceRegistrar, srv TemplatesServer) {
+	s.RegisterService(&Templates_ServiceDesc, srv)
 }
 
-func _TemplatesStorage_CreateLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Templates_CreateLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FeatureLinkTemplateStruct)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesStorageServer).CreateLink(ctx, in)
+		return srv.(TemplatesServer).CreateLink(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TemplatesStorage_CreateLink_FullMethodName,
+		FullMethod: Templates_CreateLink_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesStorageServer).CreateLink(ctx, req.(*FeatureLinkTemplateStruct))
+		return srv.(TemplatesServer).CreateLink(ctx, req.(*FeatureLinkTemplateStruct))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TemplatesStorage_CreateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Templates_CreateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TemplateStruct)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesStorageServer).CreateTemplate(ctx, in)
+		return srv.(TemplatesServer).CreateTemplate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TemplatesStorage_CreateTemplate_FullMethodName,
+		FullMethod: Templates_CreateTemplate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesStorageServer).CreateTemplate(ctx, req.(*TemplateStruct))
+		return srv.(TemplatesServer).CreateTemplate(ctx, req.(*TemplateStruct))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TemplatesStorage_DeleteTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Templates_CreateFeature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeatureStruct)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplatesServer).CreateFeature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Templates_CreateFeature_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplatesServer).CreateFeature(ctx, req.(*FeatureStruct))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Templates_DeleteTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IdStruct)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesStorageServer).DeleteTemplate(ctx, in)
+		return srv.(TemplatesServer).DeleteTemplate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TemplatesStorage_DeleteTemplate_FullMethodName,
+		FullMethod: Templates_DeleteTemplate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesStorageServer).DeleteTemplate(ctx, req.(*IdStruct))
+		return srv.(TemplatesServer).DeleteTemplate(ctx, req.(*IdStruct))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TemplatesStorage_DeleteLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Templates_DeleteLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FeatureLinkTemplateStruct)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesStorageServer).DeleteLink(ctx, in)
+		return srv.(TemplatesServer).DeleteLink(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TemplatesStorage_DeleteLink_FullMethodName,
+		FullMethod: Templates_DeleteLink_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesStorageServer).DeleteLink(ctx, req.(*FeatureLinkTemplateStruct))
+		return srv.(TemplatesServer).DeleteLink(ctx, req.(*FeatureLinkTemplateStruct))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TemplatesStorage_GetAllTemplates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Templates_GetAllTemplates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesStorageServer).GetAllTemplates(ctx, in)
+		return srv.(TemplatesServer).GetAllTemplates(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TemplatesStorage_GetAllTemplates_FullMethodName,
+		FullMethod: Templates_GetAllTemplates_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesStorageServer).GetAllTemplates(ctx, req.(*Empty))
+		return srv.(TemplatesServer).GetAllTemplates(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TemplatesStorage_GetFeaturesByTemplateId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Templates_GetFeaturesByTemplateId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(IdStruct)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesStorageServer).GetFeaturesByTemplateId(ctx, in)
+		return srv.(TemplatesServer).GetFeaturesByTemplateId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TemplatesStorage_GetFeaturesByTemplateId_FullMethodName,
+		FullMethod: Templates_GetFeaturesByTemplateId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesStorageServer).GetFeaturesByTemplateId(ctx, req.(*IdStruct))
+		return srv.(TemplatesServer).GetFeaturesByTemplateId(ctx, req.(*IdStruct))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// TemplatesStorage_ServiceDesc is the grpc.ServiceDesc for TemplatesStorage service.
+// Templates_ServiceDesc is the grpc.ServiceDesc for Templates service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var TemplatesStorage_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "TemplatesService.TemplatesStorage",
-	HandlerType: (*TemplatesStorageServer)(nil),
+var Templates_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "TemplatesService.Templates",
+	HandlerType: (*TemplatesServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateLink",
-			Handler:    _TemplatesStorage_CreateLink_Handler,
+			Handler:    _Templates_CreateLink_Handler,
 		},
 		{
 			MethodName: "CreateTemplate",
-			Handler:    _TemplatesStorage_CreateTemplate_Handler,
+			Handler:    _Templates_CreateTemplate_Handler,
+		},
+		{
+			MethodName: "CreateFeature",
+			Handler:    _Templates_CreateFeature_Handler,
 		},
 		{
 			MethodName: "DeleteTemplate",
-			Handler:    _TemplatesStorage_DeleteTemplate_Handler,
+			Handler:    _Templates_DeleteTemplate_Handler,
 		},
 		{
 			MethodName: "DeleteLink",
-			Handler:    _TemplatesStorage_DeleteLink_Handler,
+			Handler:    _Templates_DeleteLink_Handler,
 		},
 		{
 			MethodName: "GetAllTemplates",
-			Handler:    _TemplatesStorage_GetAllTemplates_Handler,
+			Handler:    _Templates_GetAllTemplates_Handler,
 		},
 		{
 			MethodName: "GetFeaturesByTemplateId",
-			Handler:    _TemplatesStorage_GetFeaturesByTemplateId_Handler,
+			Handler:    _Templates_GetFeaturesByTemplateId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

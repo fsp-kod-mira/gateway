@@ -1,3 +1,6 @@
+//go:build wireinject
+// +build wireinject
+
 package app
 
 import (
@@ -22,6 +25,7 @@ func InitApp() (*App, func(), error) {
 	panic(wire.Build(
 		newApp,
 		InitCVService,
+		InitObjectStorageService,
 		wire.NewSet(logger.New),
 		wire.NewSet(config.New),
 
@@ -64,8 +68,8 @@ func InitCVService(cfg *config.Config, logger *slog.Logger) (cv.CvServiceClient,
 
 func InitObjectStorageService(cfg *config.Config, logger *slog.Logger) (objectstoragev1.ObjectStorageClient, func(), error) {
 	l := logger.With("service", "auth")
-	host := cfg.Services.CvService.Host
-	port := cfg.Services.CvService.Port
+	host := cfg.Services.ObjectStorage.Host
+	port := cfg.Services.ObjectStorage.Port
 
 	l.Info("connecting to grpc service", slog.String("host", host), slog.Int("port", port))
 

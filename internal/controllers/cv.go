@@ -21,7 +21,7 @@ type CvController struct {
 }
 
 type ObjectStorage interface {
-	Upload(filename string, reader io.Reader, size uint64) (string, error)
+	Upload(ctx context.Context, filename string, reader io.Reader, size uint64) (string, error)
 }
 
 func NewCvController(service CvService, uploader ObjectStorage) *CvController {
@@ -49,7 +49,7 @@ func (c *CvController) Upload() fiber.Handler {
 			return internal(err.Error())
 		}
 
-		filename, err := c.uploader.Upload(f.Filename, reader, uint64(f.Size))
+		filename, err := c.uploader.Upload(ctx.Context(), f.Filename, reader, uint64(f.Size))
 		if err != nil {
 			return internal(err.Error())
 		}

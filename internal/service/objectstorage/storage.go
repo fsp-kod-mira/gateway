@@ -8,6 +8,8 @@ import (
 	"golang.org/x/net/context"
 )
 
+// var _ (controllers.ObjectStorage) = (*ObjectStorage)(nil)
+
 type ObjectStorage struct {
 	client objectstorage.ObjectStorageClient
 }
