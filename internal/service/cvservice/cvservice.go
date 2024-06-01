@@ -66,6 +66,8 @@ func (s *Service) GetAll(ctx context.Context, pagination *entity.Pagination) ([]
 
 // Upload implements controllers.CvService.
 func (s *Service) Upload(ctx context.Context, info *entity.CVInfo) error {
+	slog.Info("uploading cv", slog.Any("cv-info", info))
+
 	_, err := s.client.Upload(ctx, &cv.UploadRequest{
 		FileId:       info.FileId,
 		UploadedById: info.UploadedBy,

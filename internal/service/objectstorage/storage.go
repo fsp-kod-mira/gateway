@@ -3,6 +3,7 @@ package objectstorage
 import (
 	"gateway/api/objectstorage"
 	"io"
+	"log/slog"
 	"math"
 
 	"golang.org/x/net/context"
@@ -26,10 +27,20 @@ func (s *ObjectStorage) Upload(ctx context.Context, filename string, reader io.R
 		return "", err
 	}
 
-	chunkCount := int(math.Ceil(float64(size / (1 << 20))))
+	log := slog.With(slog.String("filename", filename), slog.Uint64("size", size))
+
+	log.Info("uploading in object storage")
+
+	window := 1 << 20
+
+	chunkCount := int(math.Ceil(float64(size) / float64(window)))
+
+	log.Info("calculate chunk count", slog.Int("chunkCount", chunkCount))
 
 	for i := 0; i < chunkCount; i++ {
-		chunk := make([]byte, 1<<20)
+		chunkSize := math.Min(float64(window), float64(size))
+		chunk := make([]byte, int(chunkSize))
+		size -= uint64(chunkSize)
 
 		_, err := reader.Read(chunk)
 		if err != nil {

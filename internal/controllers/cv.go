@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gateway/internal/entity"
 	"io"
+	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -41,6 +42,8 @@ func (c *CvController) Upload() fiber.Handler {
 		if err != nil {
 			return internal(err.Error())
 		}
+
+		slog.Info("incoming file CV", slog.Any("fileCV", f))
 
 		u := ctx.Locals("user").(*entity.UserClaims)
 
