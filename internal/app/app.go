@@ -19,8 +19,9 @@ type App struct {
 	config *config.Config
 	logger *slog.Logger
 
-	AuthController *controllers.AuthController
-	CvController   *controllers.CvController
+	AuthController     *controllers.AuthController
+	CvController       *controllers.CvController
+	TemplateController *controllers.TemplatesController
 }
 
 func newApp(
@@ -28,6 +29,7 @@ func newApp(
 	log *slog.Logger,
 	authController *controllers.AuthController,
 	cvController *controllers.CvController,
+	templateController *controllers.TemplatesController,
 ) *App {
 	app := fiber.New(fiber.Config{
 		AppName:       "sochya-gateway",
@@ -50,11 +52,12 @@ func newApp(
 	})
 
 	return &App{
-		app:            app,
-		config:         config,
-		logger:         log,
-		AuthController: authController,
-		CvController:   cvController,
+		app:                app,
+		config:             config,
+		logger:             log,
+		AuthController:     authController,
+		CvController:       cvController,
+		TemplateController: templateController,
 	}
 }
 
@@ -85,6 +88,9 @@ func (a *App) Run() error {
 	cv.Post("/", a.AuthController.AuthRequired(auth.Role_recruiter, auth.Role_hiring_manager), a.CvController.Upload())
 	cv.Get("/", a.AuthController.AuthRequired(auth.Role_hiring_manager, auth.Role_resource_manager), a.CvController.GetAll())
 	cv.Get("/:id", a.AuthController.AuthRequired(), a.CvController.Get())
+
+	v1.Get("/templates", a.AuthController.AuthRequired(auth.Role_resource_manager, auth.Role_hiring_manager), a.TemplateController.GetAll())
+	v1.Get("/features", a.AuthController.AuthRequired(auth.Role_resource_manager, auth.Role_hiring_manager), a.TemplateController.GetFeaturesByTemplate())
 
 	a.logger.Info("server started", slog.String("host", host), slog.Int("port", port))
 	return a.app.Listen(fmt.Sprintf("%s:%d", host, port))

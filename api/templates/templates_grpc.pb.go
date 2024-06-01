@@ -20,10 +20,14 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Templates_CreateLink_FullMethodName              = "/TemplatesService.Templates/CreateLink"
-	Templates_CreateTemplate_FullMethodName          = "/TemplatesService.Templates/CreateTemplate"
-	Templates_CreateFeature_FullMethodName           = "/TemplatesService.Templates/CreateFeature"
-	Templates_DeleteTemplate_FullMethodName          = "/TemplatesService.Templates/DeleteTemplate"
+	Templates_UpdateLink_FullMethodName              = "/TemplatesService.Templates/UpdateLink"
 	Templates_DeleteLink_FullMethodName              = "/TemplatesService.Templates/DeleteLink"
+	Templates_CreateTemplate_FullMethodName          = "/TemplatesService.Templates/CreateTemplate"
+	Templates_UpdateTemplate_FullMethodName          = "/TemplatesService.Templates/UpdateTemplate"
+	Templates_DeleteTemplate_FullMethodName          = "/TemplatesService.Templates/DeleteTemplate"
+	Templates_CreateFeature_FullMethodName           = "/TemplatesService.Templates/CreateFeature"
+	Templates_UpdateFeature_FullMethodName           = "/TemplatesService.Templates/UpdateFeature"
+	Templates_DeleteFeature_FullMethodName           = "/TemplatesService.Templates/DeleteFeature"
 	Templates_GetAllTemplates_FullMethodName         = "/TemplatesService.Templates/GetAllTemplates"
 	Templates_GetFeaturesByTemplateId_FullMethodName = "/TemplatesService.Templates/GetFeaturesByTemplateId"
 )
@@ -32,18 +36,17 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TemplatesClient interface {
-	// Создание связи между фичами и шаблонами
 	CreateLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*IdStruct, error)
-	// Создание нового шаблона
-	CreateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*IdStruct, error)
-	CreateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*IdStruct, error)
-	// Удаление шаблона по id
-	DeleteTemplate(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error)
-	// Удаление связи между таблицами
+	UpdateLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*Empty, error)
 	DeleteLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*Empty, error)
-	// Получение всех шаблонов
+	CreateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*IdStruct, error)
+	UpdateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*Empty, error)
+	DeleteTemplate(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error)
+	CreateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*IdStruct, error)
+	UpdateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*Empty, error)
+	DeleteFeature(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error)
 	GetAllTemplates(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*TemplatesList, error)
-	GetFeaturesByTemplateId(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*FeaturesList, error)
+	GetFeaturesByTemplateId(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*HibridFeatureLinkTemplateList, error)
 }
 
 type templatesClient struct {
@@ -63,27 +66,9 @@ func (c *templatesClient) CreateLink(ctx context.Context, in *FeatureLinkTemplat
 	return out, nil
 }
 
-func (c *templatesClient) CreateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*IdStruct, error) {
-	out := new(IdStruct)
-	err := c.cc.Invoke(ctx, Templates_CreateTemplate_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *templatesClient) CreateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*IdStruct, error) {
-	out := new(IdStruct)
-	err := c.cc.Invoke(ctx, Templates_CreateFeature_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *templatesClient) DeleteTemplate(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error) {
+func (c *templatesClient) UpdateLink(ctx context.Context, in *FeatureLinkTemplateStruct, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, Templates_DeleteTemplate_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Templates_UpdateLink_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,6 +84,60 @@ func (c *templatesClient) DeleteLink(ctx context.Context, in *FeatureLinkTemplat
 	return out, nil
 }
 
+func (c *templatesClient) CreateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*IdStruct, error) {
+	out := new(IdStruct)
+	err := c.cc.Invoke(ctx, Templates_CreateTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templatesClient) UpdateTemplate(ctx context.Context, in *TemplateStruct, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Templates_UpdateTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templatesClient) DeleteTemplate(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Templates_DeleteTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templatesClient) CreateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*IdStruct, error) {
+	out := new(IdStruct)
+	err := c.cc.Invoke(ctx, Templates_CreateFeature_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templatesClient) UpdateFeature(ctx context.Context, in *FeatureStruct, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Templates_UpdateFeature_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templatesClient) DeleteFeature(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Templates_DeleteFeature_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *templatesClient) GetAllTemplates(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*TemplatesList, error) {
 	out := new(TemplatesList)
 	err := c.cc.Invoke(ctx, Templates_GetAllTemplates_FullMethodName, in, out, opts...)
@@ -108,8 +147,8 @@ func (c *templatesClient) GetAllTemplates(ctx context.Context, in *Empty, opts .
 	return out, nil
 }
 
-func (c *templatesClient) GetFeaturesByTemplateId(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*FeaturesList, error) {
-	out := new(FeaturesList)
+func (c *templatesClient) GetFeaturesByTemplateId(ctx context.Context, in *IdStruct, opts ...grpc.CallOption) (*HibridFeatureLinkTemplateList, error) {
+	out := new(HibridFeatureLinkTemplateList)
 	err := c.cc.Invoke(ctx, Templates_GetFeaturesByTemplateId_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -121,18 +160,17 @@ func (c *templatesClient) GetFeaturesByTemplateId(ctx context.Context, in *IdStr
 // All implementations must embed UnimplementedTemplatesServer
 // for forward compatibility
 type TemplatesServer interface {
-	// Создание связи между фичами и шаблонами
 	CreateLink(context.Context, *FeatureLinkTemplateStruct) (*IdStruct, error)
-	// Создание нового шаблона
-	CreateTemplate(context.Context, *TemplateStruct) (*IdStruct, error)
-	CreateFeature(context.Context, *FeatureStruct) (*IdStruct, error)
-	// Удаление шаблона по id
-	DeleteTemplate(context.Context, *IdStruct) (*Empty, error)
-	// Удаление связи между таблицами
+	UpdateLink(context.Context, *FeatureLinkTemplateStruct) (*Empty, error)
 	DeleteLink(context.Context, *FeatureLinkTemplateStruct) (*Empty, error)
-	// Получение всех шаблонов
+	CreateTemplate(context.Context, *TemplateStruct) (*IdStruct, error)
+	UpdateTemplate(context.Context, *TemplateStruct) (*Empty, error)
+	DeleteTemplate(context.Context, *IdStruct) (*Empty, error)
+	CreateFeature(context.Context, *FeatureStruct) (*IdStruct, error)
+	UpdateFeature(context.Context, *FeatureStruct) (*Empty, error)
+	DeleteFeature(context.Context, *IdStruct) (*Empty, error)
 	GetAllTemplates(context.Context, *Empty) (*TemplatesList, error)
-	GetFeaturesByTemplateId(context.Context, *IdStruct) (*FeaturesList, error)
+	GetFeaturesByTemplateId(context.Context, *IdStruct) (*HibridFeatureLinkTemplateList, error)
 	mustEmbedUnimplementedTemplatesServer()
 }
 
@@ -143,22 +181,34 @@ type UnimplementedTemplatesServer struct {
 func (UnimplementedTemplatesServer) CreateLink(context.Context, *FeatureLinkTemplateStruct) (*IdStruct, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLink not implemented")
 }
-func (UnimplementedTemplatesServer) CreateTemplate(context.Context, *TemplateStruct) (*IdStruct, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateTemplate not implemented")
-}
-func (UnimplementedTemplatesServer) CreateFeature(context.Context, *FeatureStruct) (*IdStruct, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateFeature not implemented")
-}
-func (UnimplementedTemplatesServer) DeleteTemplate(context.Context, *IdStruct) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteTemplate not implemented")
+func (UnimplementedTemplatesServer) UpdateLink(context.Context, *FeatureLinkTemplateStruct) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateLink not implemented")
 }
 func (UnimplementedTemplatesServer) DeleteLink(context.Context, *FeatureLinkTemplateStruct) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteLink not implemented")
 }
+func (UnimplementedTemplatesServer) CreateTemplate(context.Context, *TemplateStruct) (*IdStruct, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTemplate not implemented")
+}
+func (UnimplementedTemplatesServer) UpdateTemplate(context.Context, *TemplateStruct) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTemplate not implemented")
+}
+func (UnimplementedTemplatesServer) DeleteTemplate(context.Context, *IdStruct) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTemplate not implemented")
+}
+func (UnimplementedTemplatesServer) CreateFeature(context.Context, *FeatureStruct) (*IdStruct, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateFeature not implemented")
+}
+func (UnimplementedTemplatesServer) UpdateFeature(context.Context, *FeatureStruct) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateFeature not implemented")
+}
+func (UnimplementedTemplatesServer) DeleteFeature(context.Context, *IdStruct) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFeature not implemented")
+}
 func (UnimplementedTemplatesServer) GetAllTemplates(context.Context, *Empty) (*TemplatesList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllTemplates not implemented")
 }
-func (UnimplementedTemplatesServer) GetFeaturesByTemplateId(context.Context, *IdStruct) (*FeaturesList, error) {
+func (UnimplementedTemplatesServer) GetFeaturesByTemplateId(context.Context, *IdStruct) (*HibridFeatureLinkTemplateList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFeaturesByTemplateId not implemented")
 }
 func (UnimplementedTemplatesServer) mustEmbedUnimplementedTemplatesServer() {}
@@ -192,6 +242,42 @@ func _Templates_CreateLink_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Templates_UpdateLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeatureLinkTemplateStruct)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplatesServer).UpdateLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Templates_UpdateLink_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplatesServer).UpdateLink(ctx, req.(*FeatureLinkTemplateStruct))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Templates_DeleteLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeatureLinkTemplateStruct)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplatesServer).DeleteLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Templates_DeleteLink_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplatesServer).DeleteLink(ctx, req.(*FeatureLinkTemplateStruct))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Templates_CreateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TemplateStruct)
 	if err := dec(in); err != nil {
@@ -210,20 +296,20 @@ func _Templates_CreateTemplate_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Templates_CreateFeature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FeatureStruct)
+func _Templates_UpdateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TemplateStruct)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesServer).CreateFeature(ctx, in)
+		return srv.(TemplatesServer).UpdateTemplate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Templates_CreateFeature_FullMethodName,
+		FullMethod: Templates_UpdateTemplate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesServer).CreateFeature(ctx, req.(*FeatureStruct))
+		return srv.(TemplatesServer).UpdateTemplate(ctx, req.(*TemplateStruct))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -246,20 +332,56 @@ func _Templates_DeleteTemplate_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Templates_DeleteLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FeatureLinkTemplateStruct)
+func _Templates_CreateFeature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeatureStruct)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplatesServer).DeleteLink(ctx, in)
+		return srv.(TemplatesServer).CreateFeature(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Templates_DeleteLink_FullMethodName,
+		FullMethod: Templates_CreateFeature_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplatesServer).DeleteLink(ctx, req.(*FeatureLinkTemplateStruct))
+		return srv.(TemplatesServer).CreateFeature(ctx, req.(*FeatureStruct))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Templates_UpdateFeature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeatureStruct)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplatesServer).UpdateFeature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Templates_UpdateFeature_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplatesServer).UpdateFeature(ctx, req.(*FeatureStruct))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Templates_DeleteFeature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdStruct)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplatesServer).DeleteFeature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Templates_DeleteFeature_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplatesServer).DeleteFeature(ctx, req.(*IdStruct))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -312,20 +434,36 @@ var Templates_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Templates_CreateLink_Handler,
 		},
 		{
+			MethodName: "UpdateLink",
+			Handler:    _Templates_UpdateLink_Handler,
+		},
+		{
+			MethodName: "DeleteLink",
+			Handler:    _Templates_DeleteLink_Handler,
+		},
+		{
 			MethodName: "CreateTemplate",
 			Handler:    _Templates_CreateTemplate_Handler,
 		},
 		{
-			MethodName: "CreateFeature",
-			Handler:    _Templates_CreateFeature_Handler,
+			MethodName: "UpdateTemplate",
+			Handler:    _Templates_UpdateTemplate_Handler,
 		},
 		{
 			MethodName: "DeleteTemplate",
 			Handler:    _Templates_DeleteTemplate_Handler,
 		},
 		{
-			MethodName: "DeleteLink",
-			Handler:    _Templates_DeleteLink_Handler,
+			MethodName: "CreateFeature",
+			Handler:    _Templates_CreateFeature_Handler,
+		},
+		{
+			MethodName: "UpdateFeature",
+			Handler:    _Templates_UpdateFeature_Handler,
+		},
+		{
+			MethodName: "DeleteFeature",
+			Handler:    _Templates_DeleteFeature_Handler,
 		},
 		{
 			MethodName: "GetAllTemplates",

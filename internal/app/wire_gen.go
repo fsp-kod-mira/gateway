@@ -10,12 +10,14 @@ import (
 	"fmt"
 	"gateway/api/cv"
 	objectstorage2 "gateway/api/objectstorage"
+	"gateway/api/templates"
 	"gateway/internal/config"
 	"gateway/internal/controllers"
 	"gateway/internal/logger"
 	"gateway/internal/service/authservice"
 	"gateway/internal/service/cvservice"
 	"gateway/internal/service/objectstorage"
+	"gateway/internal/service/templatesservice"
 	"github.com/gofiber/fiber/v2/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -41,8 +43,17 @@ func InitApp() (*App, func(), error) {
 	}
 	objectStorage := objectstorage.New(objectStorageClient)
 	cvController := controllers.NewCvController(cvserviceService, objectStorage)
-	app := newApp(configConfig, slogLogger, authController, cvController)
+	templatesClient, cleanup3, err := InitTemplatesService(configConfig, slogLogger)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	templatesserviceService := templatesservice.New(templatesClient, slogLogger)
+	templatesController := controllers.NewTemplatesController(templatesserviceService)
+	app := newApp(configConfig, slogLogger, authController, cvController, templatesController)
 	return app, func() {
+		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil
@@ -83,6 +94,25 @@ func InitObjectStorageService(cfg *config.Config, logger2 *slog.Logger) (objects
 	}
 
 	client := objectstorage2.NewObjectStorageClient(conn)
+	return client, func() {
+		conn.Close()
+	}, nil
+}
+
+func InitTemplatesService(cfg *config.Config, logger2 *slog.Logger) (templates.TemplatesClient, func(), error) {
+	l := logger2.With("service", "auth")
+	host := cfg.Services.TemplatesService.Host
+	port := cfg.Services.TemplatesService.Port
+
+	l.Info("connecting to grpc service", slog.String("host", host), slog.Int("port", port))
+
+	conn, err := grpc.NewClient(fmt.Sprintf("%s:%d", host, port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Error("error with connection to grpc service", slog.String("err", err.Error()))
+		return nil, nil, err
+	}
+
+	client := templates.NewTemplatesClient(conn)
 	return client, func() {
 		conn.Close()
 	}, nil

@@ -24,6 +24,10 @@ type Config struct {
 			Host string `env:"OBJECT_STORAGE_SERVICE_HOST" env-default:"localhost"`
 			Port int    `env:"OBJECT_STORAGE_SERVICE_PORT" env-default:"50054"`
 		}
+		TemplatesService struct {
+			Host string `env:"TEMPLATES_SERVICE_HOST" env-default:"localhost"`
+			Port int    `env:"TEMPLATES_SERVICE_PORT" env-default:"50054"`
+		}
 	}
 
 	LogLevel string `env:"LOG_LEVEL" env-default:"debug"`
