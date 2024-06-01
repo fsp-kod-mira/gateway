@@ -69,8 +69,11 @@ func (a *App) Run() error {
 	a.app.Use(middleware.AttachRequestId())
 	a.app.Use(middleware.AttachLogger(a.logger))
 
+	a.logger.Info("setup CORS", slog.String("AllowOrigins", a.config.CORS.Origin))
+
 	a.app.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://localhost:3001, http://localhost:3001",
+		// AllowOrigins:     "https://localhost:3001, http://localhost:3001",
+		AllowOrigins:     a.config.CORS.Origin,
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}))

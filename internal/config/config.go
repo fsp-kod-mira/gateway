@@ -29,6 +29,9 @@ type Config struct {
 			Port int    `env:"TEMPLATES_SERVICE_PORT" env-default:"50054"`
 		}
 	}
+	CORS struct {
+		Origin string `env:"CORS_ORIGIN" env-default:"http://localhost:3001"`
+	}
 
 	LogLevel string `env:"LOG_LEVEL" env-default:"debug"`
 }
